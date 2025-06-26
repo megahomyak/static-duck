@@ -5,6 +5,8 @@ union (set<int> <- possible content types)
 table (map<str, int>)
 list (set<int> <- possible content types)
 
+after thinking a bit, i guess that strings may not be *such* a built-in. i will not have any good compile-time type checking if all the numbers will be represented as strings with no further compile-time bounds. and at the same time, instanciating the "weird types" will probably be impossible if there's no special syntax for it, and if there will be, ig it may all turn into a mess. a potentially good use case, especially for stuff like C interop, is to allow to insert parts of C code into my code, manually tell the compiler all the types, and then wrap this ugliness into a Static Duck function. but that will also make library connections be insanely painful with the need to rename stuff manually if there's a conflict, so no independent libraries for Static Duck, i guess, but if it's just gonna be like in C, it's not gonna be *too* bad because if the user hosts all the sources themselves, they'll be able to rename stuff a bit when needed. i guess there may be like a built-in compile-time function that will accept a string with C code, a name of the type of the expression and its destructor. i guess i'd have to either abandon that idea for now or do make the interop, but that'd also make some of the language entities mutate themselves + it's probably gonna be better to introduce some kind of way to do better type derivations, especially for collections
+
 every function has its own variables and the variables that were around it (to have functions act like closures too). So, a function is not only its body, but also a fixed struct with vars from scope (struct fn_1_scope { t13* somename, t15* anothername })
 
 syntax attempts:
@@ -61,6 +63,18 @@ b=b
 c=c
 })
 
-functions [] mustnt't be empty, otherwise they won't have anything to return, and having no return type is prohibited. there has to be at least one expression in there, it will be returned
+functions [] mustnt't be empty, otherwise they won't have anything to return, and having no return type is prohibited. there has to be at least one expression in there, it will be returned (because the last expression gets returned)
 
-types only belong to expressions, variables just save the types assigned to them since there's no reassignment
+types only belong to expressions, variable assignments just save the types assigned to them since there's no reassignment
+
+let's say we can easily infer what variables were used in some function while scanning it. if that's the case and since functions are "detachable" (i.e. they-re first-class), we'd need to attach to any function the counted references to the variables it uses
+
+== c compilation ==
+
+for the c compilation, i think it would be nice to just have two sets of things:
+* structs
+* functions
+
+then i would insert all of the struct and function *declarations* into the file, and then the definitions. just to remove the pain of having to track references
+
+it's gonna be very easy to program if every variable that comes into a function in some way would just be a counted reference
