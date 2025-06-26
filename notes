@@ -1,0 +1,40 @@
+every type is marked by an int.
+every type is either:
+string
+union (set<int> <- possible content types)
+table (map<str, int>)
+list (set<int> <- possible content types)
+
+every function has its own variables and the variables that were around it (to have functions act like closures too). So, a function is not only its body, but also a fixed struct with vars from scope (struct fn_1_scope { t13* somename, t15* anothername })
+
+syntax attempts:
+a(b(c))
+a(b)(c)
+varname = check({
+    c = "condition here"
+    i = [
+        "one thing"
+    ]
+    e = [
+        "another thing"
+    ]
+}) #comments like this, i guess#
+
+any expr is either: [] | {} | name | name(expr)(expr)...
+technically, the last two are the same thing, "(expr)" just repeats 0 to inf times
+IMPORTANT: no end of expr variant looks like a beginning of any expr variant, which means one can just string expr expr expr and it's still gonna be human+computer-readable
+
+any statement is either: name = expr | expr
+
+list:
+[expr expr expr]
+
+table:
+[name=expr name=expr name=expr]
+- distinction is "="
+
+since empty lists and empty tables look exactly alike, an empty table would be "[=]", while an empty list would be "[]"
+
+function:
+[(optional-receiver-argument-name) statements]
+- the optional receiver argument name in parentheses works because no statement can start with parentheses
