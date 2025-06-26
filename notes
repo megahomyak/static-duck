@@ -78,3 +78,39 @@ for the c compilation, i think it would be nice to just have two sets of things:
 then i would insert all of the struct and function *declarations* into the file, and then the definitions. just to remove the pain of having to track references
 
 it's gonna be very easy to program if every variable that comes into a function in some way would just be a counted reference
+
+== very brief test program ==
+
+duck = {
+    get_quack = [
+        "Quack!"
+    ]
+}
+human = {
+    get_quack = [
+        "*sips coffee instead*"
+    ]
+}
+print_quack = [
+    print(ctx.get_quack({}))
+]
+print_quack(duck)
+print_quack(human)
+
+# if everything was a function:
+
+set (duck = table (
+    get quack = function (
+        string (Quack!)
+    )
+))
+set (human = table (
+    get quack = function (
+        string (*sips coffee instead*)
+    )
+))
+set (print quack = function (
+    print (get (ctx . get quack) ())
+))
+print quack (duck)
+print quack (human)
