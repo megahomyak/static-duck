@@ -20,21 +20,47 @@ varname = check({
     ]
 }) #comments like this, i guess#
 
-any expr is either: [] | {} | name | name(expr)(expr)...
+any expr is either: [] | {} | {=} | name | expr(expr) | expr.name
 technically, the last two are the same thing, "(expr)" just repeats 0 to inf times
 IMPORTANT: no end of expr variant looks like a beginning of any expr variant, which means one can just string expr expr expr and it's still gonna be human+computer-readable
 
 any statement is either: name = expr | expr
 
 list:
-[expr expr expr]
+{expr expr expr}
 
 table:
-[name=expr name=expr name=expr]
+{name=expr name=expr name=expr}
 - distinction is "="
 
-since empty lists and empty tables look exactly alike, an empty table would be "[=]", while an empty list would be "[]"
+since empty lists and empty tables look exactly alike, an empty table would be "{=}", while an empty list would be "{}"
 
 function:
-[(optional-receiver-argument-name) statements]
+[(optional_receiver_argument_name) statements]
 - the optional receiver argument name in parentheses works because no statement can start with parentheses
+
+recursion:
+recfn = [
+    body = [(self) #...#]
+    body(body)
+]
+
+mutual recursion:
+a = [
+ctx.c(ctx)
+]
+b = [
+ctx.b(ctx)
+]
+c = [
+ctx.a(ctx)
+]
+c({
+a=a
+b=b
+c=c
+})
+
+functions [] mustnt't be empty, otherwise they won't have anything to return, and having no return type is prohibited. there has to be at least one expression in there, it will be returned
+
+types only belong to expressions, variables just save the types assigned to them since there's no reassignment
